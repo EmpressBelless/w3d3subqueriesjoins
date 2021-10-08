@@ -1,0 +1,74 @@
+-- QUESTION 1
+SELECT first_name, last_name, district
+FROM customer INNER JOIN address
+ON customer.address_id = address.address_id
+WHERE district = 'Texas';
+
+-- QUESTION 2
+SELECT c.first_name || ' ' || c.last_name as full_name, p.amount, p.payment_id
+FROM customer c INNER JOIN payment p
+ON c.customer_id = p.customer_id
+WHERE amount > 6.99
+-- QUESTION3
+SELECT c.first_name || ' ' || c.last_name as full_name, amount
+FROM customer c INNER JOIN payment p
+ON c.customer_id = p.customer_id
+WHERE p.customer_id IN (Select sum(amount) FROM payment GROUP BY amount HAVING sum(amount) > 175)
+-- I really am trial and erroring here 
+
+-- Question 4
+-- SELECT customer.first_name, customer.last_name, city
+-- FROM customer JOIN address
+-- ON customer.address_id = address.address_id
+-- WHERE address.city_id IN (SELECT city_id FROM city WHERE )
+Select first_name || ' ' || last_name as full_name FROM customer WHERE address_id IN
+	(Select address.address_id from address Where address.city_id =
+		(SELECT City_id from city WHERE city.country_id = 
+ 			(SELECT country_id from country where country = 'Nepal')));
+ 
+-- Here I struggled also but then I told myself to work backwards.
+-- QUESTION 5
+SELECT s.first_name || ' ' || s.last_name AS full_name, count(*)
+FROM payment p Inner JOIN staff s
+ON p.staff_id = s.staff_id
+GROUP BY s.first_name, s.last_name
+-- just realized theres only two employees. I realized I needed to group by their names and then count...
+SELECT * FROM staff
+
+SELECT staff_id, count(*) as total
+from payment
+GROUP BY staff_id
+-- Answer: Jon Stephens
+
+-- Question 6
+SELECT count(a_.actor_id) as total, title
+FROM actor a_ INNER JOIN film_actor fa
+ON a_.actor_id = fa.actor_id
+JOIN film fi
+ON fa.film_id = fi.film_id
+GROUP BY title
+ORDER BY total desc
+LIMIT 1
+
+-- SELECT film_id, title, count(film_id) as total
+-- from film
+-- GROUP by film_id
+
+-- Question 7
+SELECT a_.first_name, a_.last_name, count(fi.film_id) as total
+FROM actor a_ INNER JOIN film_Actor fa
+ON a_.actor_id = fa.actor_id
+JOIN film fi
+ON fa.film_id = fi.film_id
+GROUP BY a_.first_name, a_.last_name
+ORDER BY total
+-- ANSWER EMILY DEE WITH 14.  I didn't change much at all from the first one.  I removed my count actor id, and added count films
+
+-- QUESTION 8
+SELECT district, count(district) as total
+FROM customer INNER JOIN address
+ON customer.address_id = address.address_id
+GROUP BY district
+ORDER by count(district) DESC;
+-- ANSWER is 9. I just realized.. I really didnt need to join tables. 
+
